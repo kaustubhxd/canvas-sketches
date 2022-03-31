@@ -10,7 +10,7 @@ jobs:
       - name: Install and build
         env:
           FILES: sketch-07.js
-        run: npm install canvas-sketch-cli --global
+        run: npm install canvas-sketch-cli --global;
           for file in $FILES
           do
           canvas-sketch $file --dir public/$file --build --no-compress
