@@ -16,7 +16,7 @@ jobs:
         env:
           FILE: sketch-07.js
         run:
-          canvas-sketch sketch-07.js --dir public/sketch-07 --build --no-compress
+          CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch sketch-07.js --dir public/sketch-07 --build --no-compress
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
