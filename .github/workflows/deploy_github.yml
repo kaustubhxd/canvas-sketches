@@ -14,10 +14,10 @@ jobs:
         run: npm install
       - name: Build code
         env:
-          FILE: sketch-07.js
+          FILE: sketch-07
+          FILE_EXT: sketch-07.js
         run:
-          FILEXT="sketch-07.js" 
-          CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILEXT --dir public/sketch-07 --name index --build --no-compress
+          CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILEXT --dir public/$FILE_EXT --name index --build --no-compress
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
