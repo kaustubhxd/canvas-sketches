@@ -17,7 +17,6 @@ jobs:
           FILE: sketch-07
           FILE_EXT: public/sketch-07.js
         run:
-          echo ""
           CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILEXT --dir $FILE --name index --build --no-compress
 
       - name: Deploy 🚀
