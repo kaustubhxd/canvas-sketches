@@ -10,6 +10,8 @@ jobs:
       - name: Install Canvas Sketch CLI
         run: 
           npm install canvas-sketch-cli --global
+      - name: Install dependencies
+        run: npm install
       - name: Build code
         env:
           FILE: sketch-07.js
