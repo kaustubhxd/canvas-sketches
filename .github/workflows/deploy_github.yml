@@ -14,8 +14,8 @@ jobs:
         run: npm install
       - name: Build code
         env:
-          FILE: sketch-05.js
-          FILE_DIR: public/sketch-05
+          FILE: sketch-04.js
+          FILE_DIR: public/sketch-04
         run:
           CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILE --dir $FILE_DIR --name index --build --no-compress
 
