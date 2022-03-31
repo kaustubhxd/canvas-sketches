@@ -1,4 +1,4 @@
-// Squares in a circle rotating and revolving
+// SKETCH 07: Squares in a circle rotating and revolving
 const canvasSketch = require("canvas-sketch");
 const Tweakpane = require("tweakpane");
 
