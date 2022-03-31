@@ -10,7 +10,7 @@ jobs:
       - name: Install and build
         env:
           FILES: sketch-07.js
-        run: yarn install
+        run: npm install canvas-sketch-cli
           for file in $FILES;
           do
           canvas-sketch $file --dir public/$file --build --no-compress
