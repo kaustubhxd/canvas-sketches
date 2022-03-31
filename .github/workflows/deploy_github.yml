@@ -9,7 +9,7 @@ jobs:
 
       - name: Install Canvas Sketch CLI
         run: 
-          npm install canvas-sketch-cli --global
+          npm install canvas-sketch-cli@1.11.9 --global
       - name: Install dependencies
         run: npm install
       - name: Build code
