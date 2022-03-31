@@ -15,9 +15,10 @@ jobs:
       - name: Build code
         env:
           FILE: sketch-07
-          FILE_EXT: sketch-07.js
+          FILE_EXT: public/sketch-07.js
         run:
-          CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILEXT --dir public/$FILE_EXT --name index --build --no-compress
+          echo ""
+          CANVAS_SKETCH_OUTPUT=./outputs canvas-sketch $FILEXT --dir $FILE --name index --build --no-compress
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
