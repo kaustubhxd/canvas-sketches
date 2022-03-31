@@ -11,7 +11,7 @@ jobs:
         env:
           FILES: sketch-07.js
         run: npm install canvas-sketch-cli
-          for file in $FILES;
+          for file in $FILES
           do
           canvas-sketch $file --dir public/$file --build --no-compress
           done
