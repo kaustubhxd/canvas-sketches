@@ -9260,139 +9260,126 @@
 }));
 
 },{}],3:[function(require,module,exports){
+// Squares in a circle rotating and revolving
 const canvasSketch = require("canvas-sketch");
 const Tweakpane = require("tweakpane");
 
+document.title = document.URL.split("/").at(-2);
 const settings = {
   dimensions: [1080, 1080],
   animate: true,
 };
 
 const params = {
-  resetOnTweak: true,
-  invert: false,
-  lineWidth: 20,
-  lineSkew: 0.7,
-  spacing: 54,
-  lineCap: "round",
-  delay: 1,
-  strokeStyle: "#000000ff",
-  ERROR_FLAG: false,
+  errorFlag: false,
+  bgColor: "#e4d0ec",
+  mainColor: "#f33f48",
+  numberOfShapes: 10,
+  circleRadius: 250,
+  shapeWidth: 100,
+  shapeHeight: 100,
+  circleSpeed: 0.022,
+  shapeSpeed: 0.025,
+  scaleMin: 1,
+  scaleMax: 3,
 };
 
-let spacing = params.spacing;
-let pos = {
-  x: 0,
-  y: 0,
-  moveXCount: 1,
-  moveYCount: 1,
-  xMovesLeft: 1,
-  yMovesLeft: 1,
-  xDirRight: true,
-  yDirDown: false,
-};
+let shapes = [];
 
-const createTweakPane = ({ pane, ctx, width, height }) => {
-  const paneFolder = pane.addFolder({ title: "Tweakpane" });
-  paneFolder.expanded = false;
-  paneFolder.addInput(params, "resetOnTweak");
-  paneFolder.addInput(params, "invert");
-  paneFolder.addInput(params, "lineWidth", { min: 1, max: 30, step: 1 });
-  paneFolder.addInput(params, "lineCap", {
-    options: {
-      round: "round",
-      butt: "butt",
-      square: "square",
-    },
-  });
-  paneFolder.addInput(params, "lineSkew", { min: 0.0, max: 1.0, step: 0.1 });
-  paneFolder.addInput(params, "delay", { min: 1, max: 10, step: 1 });
-  paneFolder.addInput(params, "spacing", { min: 40, max: 100, step: 10 });
-  paneFolder.addInput(params, "strokeStyle", {
-    picker: "inline",
-    expanded: true,
-  });
-  paneFolder.addSeparator();
-  paneFolder.addButton({ title: "Redraw" }).on("click", () => resetSketch({ ctx, width, height }));
-};
-
-const resetSketch = ({ ctx, width, height }) => {
-  spacing = params.spacing;
-  pos.x = Math.round(width / 2) - spacing / 2;
-  pos.y = Math.round(height / 2) - spacing / 2;
-  pos = {
-    ...pos,
-    moveXCount: 1,
-    moveYCount: 1,
-    xMovesLeft: 1,
-    yMovesLeft: 1,
-    xDirRight: true,
-    yDirDown: false,
-  };
-  ctx.fillStyle = params.invert ? "black" : "white";
-  ctx.fillRect(0, 0, width, height);
+const resetSketch = () => {
+  shapes = [];
+  for (let i = 0; i < params.numberOfShapes; i++) {
+    const angle = (2 * Math.PI * i) / params.numberOfShapes;
+    const x = params.circleRadius * Math.cos(angle);
+    const y = params.circleRadius * Math.sin(angle);
+    // console.log({ x, y });
+    const shape = new Square(x, y, params.shapeWidth, params.shapeHeight, angle);
+    shapes.push(shape);
+  }
 };
 
 const sketch = ({ context: ctx, width, height }) => {
-  resetSketch({ ctx, width, height });
-  const pane = new Tweakpane.Pane();
-  pane.on("change", (ev) => {
-    console.log(ev);
-    if (params.resetOnTweak) resetSketch({ ctx, width, height });
-  });
-  createTweakPane({ pane, ctx, width, height });
-
+  resetSketch();
   return ({ context: ctx, width, height, frame }) => {
-    if (params.ERROR_FLAG) return;
-    if (pos.y > height || pos.y < 0 || pos.x < 0 || pos.x > width) return;
-    console.log("running");
+    if (params.errorFlag) return;
+    ctx.fillStyle = params.bgColor;
+    ctx.fillRect(0, 0, width, height);
 
     try {
-      ctx.lineCap = params.lineCap;
-      ctx.lineWidth = params.lineWidth;
-      ctx.strokeStyle = params.strokeStyle;
+      ctx.translate(width / 2, height / 2);
 
-      if (frame % params.delay === 0) {
-        ctx.beginPath();
-        if (Math.random() > params.lineSkew) {
-          ctx.moveTo(pos.x, pos.y);
-          ctx.lineTo(pos.x + spacing, pos.y + spacing);
-        } else {
-          ctx.moveTo(pos.x, pos.y + spacing);
-          ctx.lineTo(pos.x + spacing, pos.y);
-        }
-        ctx.stroke();
-        console.log(pos);
-        if (pos.yMovesLeft > 0) {
-          pos.y = pos.yDirDown ? pos.y + spacing : pos.y - spacing;
-          pos.yMovesLeft -= 1;
-        } else if (pos.xMovesLeft > 0) {
-          pos.x = pos.xDirRight ? pos.x + spacing : pos.x - spacing;
-          pos.xMovesLeft -= 1;
-        } else {
-          pos.yDirDown = !pos.yDirDown;
-          pos.xDirRight = !pos.xDirRight;
-          pos.moveXCount += 1;
-          pos.moveYCount += 1;
-          pos.xMovesLeft = pos.moveXCount;
-          pos.yMovesLeft = pos.moveYCount;
-        }
-      }
+      ctx.save();
+      ctx.rotate(frame * params.circleSpeed);
+      shapes.forEach((shape) => {
+        shape.update(ctx, frame);
+        shape.draw(ctx);
+      });
+      ctx.restore();
     } catch (err) {
       console.log(err);
-      params.ERROR_FLAG = true;
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, width, height);
-      ctx.font = "48px serif";
-      ctx.fillStyle = "black";
-      ctx.fillText(err, 10, 50);
+      params.errorFlag = true;
     }
   };
 };
 
-canvasSketch(sketch, settings);
+class Square {
+  constructor(x, y, width, height, angle) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.angle = angle;
+    // this.fillStyle = params.mainColor;
+    this.rotation = 0;
+    this.scale = 1;
+    this.scaleExpand = true;
+  }
 
-// #c83737ff
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.rotate(this.rotation);
+
+    this.scale = this.scaleExpand ? this.scale + 0.005 : this.scale - 0.005;
+    if (this.scale > params.scaleMax) this.scaleExpand = false;
+    else if (this.scale <= params.scaleMin) this.scaleExpand = true;
+    ctx.scale(this.scale, this.scale);
+    ctx.beginPath();
+    ctx.rect(0 - this.width / 2, 0 - this.height / 2, this.width, this.height);
+    ctx.fillStyle = params.mainColor;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  update(ctx, frame) {
+    this.rotation = frame * params.shapeSpeed;
+  }
+}
+
+const createTweakPane = () => {
+  const pane = new Tweakpane.Pane();
+  const paneFolder = pane.addFolder({ title: "Tweakpane" });
+  // paneFolder.expanded = false;
+  paneFolder.addInput(params, "bgColor");
+  paneFolder.addInput(params, "mainColor");
+  paneFolder.addInput(params, "numberOfShapes", { min: 1, max: 100, step: 1, label: "No. of shapes" });
+  paneFolder.addInput(params, "circleRadius", { min: 10, max: 400, step: 1 });
+  paneFolder.addInput(params, "shapeWidth", { min: 10, max: 200, step: 1 });
+  paneFolder.addInput(params, "shapeHeight", { min: 10, max: 200, step: 1 });
+  paneFolder.addInput(params, "circleSpeed", { min: 0, max: 0.5, step: 0.01 });
+  paneFolder.addInput(params, "shapeSpeed", { min: 0, max: 0.5, step: 0.01 });
+  paneFolder.addInput(params, "scaleMin", { min: 0, max: 1.5, step: 0.1 });
+  paneFolder.addInput(params, "scaleMax", { min: 2, max: 3.5, step: 0.1 });
+
+  pane.on("change", (ev) => {
+    console.log(ev);
+    resetSketch();
+  });
+};
+
+canvasSketch(sketch, settings);
+createTweakPane();
 
 },{"canvas-sketch":1,"tweakpane":2}],4:[function(require,module,exports){
 (function (global){(function (){
