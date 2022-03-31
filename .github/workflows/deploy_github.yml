@@ -14,8 +14,7 @@ jobs:
         env:
           FILES: sketch-07.js
         run:
-          for file in $FILES do canvas-sketch $file --dir public/$file --build --no-compress
-          done
+          for file in $FILES do canvas-sketch $file --dir public/$file --build --no-compress; done
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
