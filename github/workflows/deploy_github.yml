@@ -1,0 +1,23 @@
+name: Build and Deploy
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+
+      - name: Install and build
+        env:
+          FILES: sketch-07.js
+        run: yarn install
+          for file in $FILES;
+          do
+          canvas-sketch $file --dir public/$file --build --no-compress
+          done
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: ./public/
