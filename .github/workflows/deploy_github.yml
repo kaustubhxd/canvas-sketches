@@ -12,10 +12,6 @@ jobs:
           FILES: sketch-07.js
         run: 
           npm install canvas-sketch-cli --global
-          for file in $FILES 
-          do 
-            canvas-sketch $file --dir public/$file --build --no-compress 
-          done
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
