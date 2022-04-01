@@ -9595,7 +9595,6 @@ const createTweakPane = () => {
   const pane = new Tweakpane.Pane();
   const paneFolder = pane.addFolder({ title: "Tweakpane" });
   // paneFolder.expanded = false;
-  paneFolder.addInput(params, "bgColor");
   paneFolder.addInput(params, "primaryColor");
   paneFolder.addInput(params, "secondaryColor");
 
