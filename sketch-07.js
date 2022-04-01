@@ -2,7 +2,10 @@
 const canvasSketch = require("canvas-sketch");
 const Tweakpane = require("tweakpane");
 
+// html stuff
 document.title = document.URL.split("/").at(-2);
+document.body.style.backgroundColor = "aliceblue";
+
 const settings = {
   dimensions: [1080, 1080],
   animate: true,
@@ -114,6 +117,7 @@ const createTweakPane = () => {
     console.log(ev);
     resetSketch();
   });
+  document.querySelector(".tp-dfwv").style.width = "280px";
 };
 
 canvasSketch(sketch, settings);
