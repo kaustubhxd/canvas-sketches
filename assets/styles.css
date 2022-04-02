@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.world {
+  display: grid;
+  grid-template-columns: 500px 500px 500px;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.world img {
+  width: 500px;
+}
