@@ -4,6 +4,10 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Move index.html
+        run: git checkout gh-pages
+          git checkout master -- index.html
+          git commit -m "update index file"
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
