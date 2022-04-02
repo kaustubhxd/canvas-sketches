@@ -6,7 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.1
       - name: Move index.html
-        run: git checkout gh-pages
+        run: |
+          git checkout gh-pages
           git checkout master -- index.html
           git commit -m "update index file"
       - name: Checkout 🛎️
