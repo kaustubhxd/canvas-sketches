@@ -44,6 +44,8 @@ const handleMouseMove = (event) => {
   aimX = -1 * (panWidth * normalX);
   aimY = -1 * (panHeight * normalY);
 
+  console.log(aimY, worldHeight, winHeight);
+
   //   console.log({ normalX, normalY });
 };
 
@@ -52,7 +54,7 @@ const animate = () => {
   currentY += (aimY - currentY) * 0.05;
 
   world.style.left = currentX + "px";
-  world.style.top = currentY + "px";
+  world.style.top = currentY > mouseAimMarginY / 2 ? mouseAimMarginY / 2 : currentY + "px";
 
   requestAnimationFrame(animate);
 };
