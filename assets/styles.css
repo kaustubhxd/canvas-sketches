@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  background-color: ghostwhite;
+}
+
+.world {
+  display: grid;
+  grid-template-columns: 500px 500px 500px;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+}
+
+.world img {
+  width: 500px;
+  box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.15);
+}
