@@ -5,6 +5,8 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+
+  background-color: ghostwhite;
 }
 
 .world {
@@ -14,10 +16,12 @@ body {
   grid-row-gap: 20px;
 
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 0;
+  left: 0;
+  padding: 20px;
 }
 
 .world img {
   width: 500px;
+  box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.15);
 }
