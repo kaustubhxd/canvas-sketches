@@ -1,25 +1,5 @@
 const world = document.querySelector(".world");
 
-function mapRange(value, inputMin, inputMax, outputMin, outputMax, clamp) {
-  // Reference:
-  // https://openframeworks.cc/documentation/math/ofMath/
-  if (Math.abs(inputMin - inputMax) < Number.EPSILON) {
-    return outputMin;
-  } else {
-    var outVal = ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) + outputMin;
-    if (clamp) {
-      if (outputMax < outputMin) {
-        if (outVal < outputMax) outVal = outputMax;
-        else if (outVal > outputMin) outVal = outputMin;
-      } else {
-        if (outVal > outputMax) outVal = outputMax;
-        else if (outVal < outputMin) outVal = outputMin;
-      }
-    }
-    return outVal;
-  }
-}
-
 const mouseAimMarginX = 250;
 const mouseAimMarginY = 200;
 
@@ -59,5 +39,7 @@ const animate = () => {
   requestAnimationFrame(animate);
 };
 
-animate();
-if (window.innerWidth > 768) document.addEventListener("mousemove", handleMouseMove);
+if (window.innerWidth > 768) {
+  animate();
+  document.addEventListener("mousemove", handleMouseMove);
+}
