@@ -60,5 +60,4 @@ const animate = () => {
 };
 
 animate();
-
-document.addEventListener("mousemove", handleMouseMove);
+if (window.innerWidth > 768) document.addEventListener("mousemove", handleMouseMove);
