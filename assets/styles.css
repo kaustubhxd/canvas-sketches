@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
 body {
   margin: 0;
   padding: 0;
@@ -7,6 +10,20 @@ body {
   overflow: hidden;
 
   background-color: ghostwhite;
+  font-family: "Roboto Mono", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+.header {
+  position: fixed;
+  top: 20px;
+  left: 30px;
+  font-size: 32px;
+  z-index: 9;
+  background-blend-mode: screen;
+  color: azure;
+  font-weight: 300;
+  mix-blend-mode: difference;
 }
 
 .world {
