@@ -21,12 +21,14 @@ const params = {
   noOfShapes: 50,
   minShapeSize: 100,
   shapeIncrement: 20,
-  animateDuration: 60 * 4,
+  animateDuration: 60 * 2,
+  aDelay: 1 / 120,
 };
 
-const shapes = [];
+let shapes = [];
 
 const resetSketch = () => {
+  shapes = [];
   for (let i = params.noOfShapes; i >= 0; i--) {
     const pos = -(params.minShapeSize / 2 + params.shapeIncrement * i);
     const size = (params.minShapeSize + params.shapeIncrement * i) * 2 - params.minShapeSize;
@@ -84,13 +86,12 @@ class Square {
     const frameNormal = currentFrame / params.animateDuration;
     // console.log(frameNormal);
 
-    const staggerStart = index * 0.01;
-    const staggerEnd = index * 0.01;
+    const staggerStart = params.aDelay * (params.noOfShapes - index);
+    const staggerEnd = params.aDelay * index;
 
-    const frameStaggerNormal = math.mapRange(frameNormal, staggerStart, 1, 0, 1, true);
+    const frameStaggerNormal = math.mapRange(frameNormal, staggerStart, 1 - staggerEnd, 0, 1, true);
     const easeNormal = easeInOutCubic(frameStaggerNormal);
 
-    // console.log(currentFrame);
     this.rotation = easeNormal * Math.PI;
   }
 }
@@ -101,6 +102,10 @@ const createTweakPane = () => {
   // paneFolder.expanded = false;
   paneFolder.addInput(params, "primaryColor");
   paneFolder.addInput(params, "secondaryColor");
+  paneFolder.addInput(params, "noOfShapes", { label: "No. of shapes", min: 1, max: 60, step: 1 });
+  paneFolder.addInput(params, "minShapeSize", { min: 50, max: 250, step: 1 });
+  paneFolder.addInput(params, "shapeIncrement", { min: 10, max: 50, step: 1 });
+  paneFolder.addInput(params, "animateDuration", { min: 30, max: 360, step: 30 });
 
   pane.on("change", (tweak) => {
     resetSketch();
