@@ -16,15 +16,30 @@ const params = {
   bgColor: "#fff",
   mainColor: "#000",
 };
+let pane;
 
-const resetSketch = () => {};
+/**
+ * @param {Object} sketch
+ * @param {CanvasRenderingContext2D} sketch.ctx canvas context
+ */
+const resetSketch = ({ ctx, width, height }) => {
+  console.log({ ctx, width, height });
 
+  ctx.fillStyle = params.bgColor;
+  ctx.fillRect(0, 0, width, height);
+};
+
+/**
+ * @param {Object} sketch
+ * @param {CanvasRenderingContext2D} sketch.context canvas context
+ */
 const sketch = ({ context: ctx, width, height }) => {
-  resetSketch();
+  resetSketch({ ctx, width, height });
+  pane.on("change", (tweak) => {
+    resetSketch({ ctx, width, height });
+  });
   return ({ context: ctx, width, height, frame }) => {
     if (params.errorFlag) return;
-    ctx.fillStyle = params.bgColor;
-    ctx.fillRect(0, 0, width, height);
 
     try {
       // animation code here
@@ -36,15 +51,12 @@ const sketch = ({ context: ctx, width, height }) => {
 };
 
 const createTweakPane = () => {
-  const pane = new Tweakpane.Pane();
+  pane = new Tweakpane.Pane();
   const paneFolder = pane.addFolder({ title: "Tweakpane" });
   // paneFolder.expanded = false;
   paneFolder.addInput(params, "bgColor");
-  paneFolder.addInput(params, "mainColor");
+  //   paneFolder.addInput(params, "mainColor");
 
-  pane.on("change", (tweak) => {
-    resetSketch();
-  });
   document.querySelector(".tp-dfwv").style.width = "280px";
 };
 
