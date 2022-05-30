@@ -4,18 +4,38 @@ let canvasNode, isPanelExpanded;
 let originalSize = {
   cSide: 0,
   cMarginTop: 0,
+  cMarginLeft: 0,
 };
 
 const resizeObserver = new ResizeObserver((entries) => {
   if (!isPanelExpanded) return;
   for (let entry of entries) {
     if (entry.contentRect) {
+      // check if the canvas and panel clash on the X axis
       const panelMarginLeft = entry.target.offsetLeft;
       const canvasMarginLeft = canvasNode.offsetLeft;
       const canvasWidth = parseInt(canvasNode.style.width);
-
       const isCanvasPanelClashingXAxis = canvasMarginLeft + canvasWidth > panelMarginLeft;
       if (!isCanvasPanelClashingXAxis) return;
+
+      // check which axis the canvas should translate to. if X-axis, exit resizeObserver
+      if (panelMarginLeft - canvasWidth > 0) {
+        console.log("translateLeft!");
+        canvasNode.style.transition = "all 0.3s ease-in-out";
+        canvasNode.style.marginLeft = originalSize.cMarginLeft + "px";
+        window.requestAnimationFrame(() => {
+          canvasNode.style.marginLeft =
+            canvasMarginLeft - (canvasMarginLeft + canvasWidth - panelMarginLeft + 20) + "px";
+          // canvasNode.style.width = originalSize.cSide + "px";
+          // canvasNode.style.height = originalSize.cSide + "px";
+          canvasNode.addEventListener("transitionend", () => {
+            console.log("Transition ended");
+            canvasNode.style.transition = "none";
+            // canvasNode.removeEventListener("transitionend", handleMouseDown, true);
+          });
+        });
+        return;
+      }
 
       const panelHeight = +entry.contentRect.height;
       const panelWidth = +entry.contentRect.width;
@@ -72,6 +92,7 @@ export const autoAdjustCanvas = (canvas, panelNode, isPanelOpen) => {
   originalSize = {
     cSide: parseInt(canvasNode.style.width),
     cMarginTop: canvasNode.offsetTop,
+    cMarginLeft: canvasNode.offsetLeft,
   };
 
   panelNode.addEventListener("click", () => {
@@ -87,7 +108,7 @@ export const autoAdjustCanvas = (canvas, panelNode, isPanelOpen) => {
       canvasNode.addEventListener("transitionend", () => {
         console.log("Transition ended");
         canvasNode.style.transition = "none";
-        canvasNode.removeEventListener("transitionend", handleMouseDown, true);
+        // canvasNode.removeEventListener("transitionend", handleMouseDown, true);
       });
     }
   });
