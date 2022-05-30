@@ -1,10 +1,15 @@
 // SKETCH 07: Squares in a circle rotating and revolving
 const canvasSketch = require("canvas-sketch");
 const Tweakpane = require("tweakpane");
+const { autoAdjustCanvas } = require("./utils/autoAdjustCanvas");
+
+console.log(autoAdjustCanvas);
 
 // html stuff
 document.title = document.URL.split("/").at(-2);
 document.body.style.backgroundColor = "aliceblue";
+document.body.style.overflowX = "hidden";
+document.body.style.overflowY = "hidden";
 
 const settings = {
   dimensions: [1080, 1080],
@@ -98,10 +103,10 @@ class Square {
   }
 }
 
-const createTweakPane = () => {
+const createTweakPane = ({ canvas }) => {
   const pane = new Tweakpane.Pane();
   const paneFolder = pane.addFolder({ title: "Tweakpane" });
-  // paneFolder.expanded = false;
+  paneFolder.expanded = false;
   paneFolder.addInput(params, "bgColor");
   paneFolder.addInput(params, "mainColor");
   paneFolder.addInput(params, "numberOfShapes", { min: 1, max: 100, step: 1, label: "No. of shapes" });
@@ -113,6 +118,9 @@ const createTweakPane = () => {
   paneFolder.addInput(params, "scaleMin", { min: 0, max: 1.5, step: 0.1 });
   paneFolder.addInput(params, "scaleMax", { min: 2, max: 3.5, step: 0.1 });
 
+  const panelNode = pane.containerElem_;
+  autoAdjustCanvas(canvas, panelNode, paneFolder.expanded);
+
   pane.on("change", (ev) => {
     console.log(ev);
     resetSketch();
@@ -120,5 +128,7 @@ const createTweakPane = () => {
   document.querySelector(".tp-dfwv").style.width = "280px";
 };
 
-canvasSketch(sketch, settings);
-createTweakPane();
+canvasSketch(sketch, settings).then(({ props }) => {
+  const { canvas } = props;
+  createTweakPane({ canvas });
+});
