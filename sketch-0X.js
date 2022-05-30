@@ -15,8 +15,12 @@ const params = {
   errorFlag: false,
   bgColor: "#fff",
   mainColor: "#000",
+  fillStyle: "lemonchiffon",
+  shapeSize: 42,
+  noOfShapes: 25,
 };
 let pane;
+const shapes = [];
 
 /**
  * @param {Object} sketch
@@ -27,6 +31,13 @@ const resetSketch = ({ ctx, width, height }) => {
 
   ctx.fillStyle = params.bgColor;
   ctx.fillRect(0, 0, width, height);
+
+  const sy = height / 2 - params.shapeSize / 2;
+  for (let i = 0; i < params.noOfShapes; i++) {
+    const sx = params.shapeSize * i + 10;
+    const shape = new Square(sx, sy);
+    shapes.push(shape);
+  }
 };
 
 /**
@@ -48,12 +59,27 @@ const sketch = ({ context: ctx, width, height }) => {
 
     try {
       // animation code here
+      shapes.forEach((shape) => {
+        shape.draw(ctx);
+      });
     } catch (err) {
       console.log(err);
       params.errorFlag = true;
     }
   };
 };
+
+class Square {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = params.fillStyle;
+    ctx.fillRect(this.x, this.y, params.shapeSize, params.shapeSize);
+  }
+}
 
 const createTweakPane = () => {
   pane = new Tweakpane.Pane();

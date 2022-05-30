@@ -10,7 +10,7 @@
  * @param {Number} radius The corner radius. Defaults to 5;
  * @param {String} renderType STROKE,FILL or BOTH
  */
-export const roundRect = (ctx, x, y, w, h, r, renderType) => {
+export const roundRectTypeA = (ctx, x, y, w, h, r) => {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);
@@ -22,19 +22,16 @@ export const roundRect = (ctx, x, y, w, h, r, renderType) => {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
+};
 
-  switch (renderType.toUpperCase()) {
-    case "STROKE":
-      ctx.stroke();
-      break;
-    case "FILL":
-      ctx.fill();
-      break;
-    case "BOTH":
-      ctx.stroke();
-      ctx.fill();
-      break;
-    default:
-      break;
-  }
+export const roundRectTypeB = (ctx, x, y, w, h, r) => {
+  if (w < 2 * r) r = w / 2;
+  if (h < 2 * r) r = h / 2;
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 };

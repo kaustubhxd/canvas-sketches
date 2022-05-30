@@ -3,9 +3,9 @@
 // dependencies
 const canvasSketch = require("canvas-sketch");
 const Tweakpane = require("tweakpane");
-const { roundRect } = require("./utils/ctxMethods");
+const { roundRectTypeA, roundRectTypeB } = require("./utils/ctxMethods");
 
-CanvasRenderingContext2D.prototype.roundRect = roundRect;
+CanvasRenderingContext2D.prototype.roundRect = roundRectTypeB;
 
 // html-css styling stuff
 document.title = document.URL.split("/").at(-2);
@@ -13,16 +13,15 @@ document.body.style.backgroundColor = "aliceblue";
 
 const settings = {
   dimensions: [1080, 1080],
-  // animate: true,
+  animate: true,
 };
 
 const params = {
   errorFlag: false,
   bgColor: "#fff",
   mainColor: "#000",
-  noOfShapes: 200,
-  squareSize: 20,
-  borderRadius: 100,
+  noOfShapes: 30,
+  lineWidth: 10,
 };
 let pane;
 
@@ -44,17 +43,12 @@ const sketch = ({ context: ctx, width, height }) => {
     resetSketch({ ctx, width, height });
   });
 
-  let { squareSize, noOfShapes } = params;
-  const decrement = squareSize / noOfShapes;
-  for (let i = 0; i < noOfShapes; i++) {
-    squareSize -= 1;
-    const shape = new RoundedSquare(
-      -squareSize / 2,
-      -squareSize / 2,
-      squareSize,
-      squareSize,
-      params.borderRadius - i * 3
-    );
+  let squareSize = 10;
+  let borderRadius = 10;
+  for (let i = 0; i < params.noOfShapes; i++) {
+    const shape = new RoundedSquare(-squareSize / 2, -squareSize / 2, squareSize, squareSize, borderRadius);
+    borderRadius += i * 0.3;
+    squareSize += params.lineWidth * 2.5;
     shapes.push(shape);
   }
   console.log(shapes);
@@ -67,11 +61,15 @@ const sketch = ({ context: ctx, width, height }) => {
 
     try {
       // animation code here
+      ctx.fillStyle = "white";
+      ctx.rect(0, 0, width, height);
+      ctx.fill();
       ctx.translate(width / 2, height / 2);
+      // ctx.strokeStyle = "black";
+      ctx.lineWidth = params.lineWidth;
       shapes.forEach((shape, index) => {
-        shape.draw(ctx);
+        shape.draw(ctx, frame, index);
       });
-      const size = params.squareSize;
     } catch (err) {
       console.log(err);
       params.errorFlag = true;
@@ -88,9 +86,12 @@ class RoundedSquare {
     this.radius = radius;
   }
 
-  draw(ctx) {
-    ctx.lineWidth = 6;
+  draw(ctx, frame, index) {
+    ctx.save();
+    ctx.rotate(Math.sin((frame + index) * 0.002));
     ctx.roundRect(ctx, this.x, this.y, this.width, this.height, this.radius, "stroke");
+    ctx.stroke();
+    ctx.restore();
   }
 }
 
